@@ -26,10 +26,9 @@ class DomainScrapJob implements ShouldQueue
     public function __construct(private $domain_tlds, private $location, private $keywords, private $additional_keyword, private $year, private $niche = null, private $sub_niche = null, private $country = null, private $city = null, private $city_name, private $country_name, private $niche_name, private $sub_niche_name)
     {
         $domain_tlds = $this->domain_tlds;
-        if(count($domain_tlds) > 1){
+        if (count($domain_tlds) > 1) {
             $domain_tlds = \implode(',', $domain_tlds);
-        }
-        else{
+        } else {
             $domain_tlds = $domain_tlds[0];
         }
         $this->jobdone = JobDone::create([
@@ -123,9 +122,9 @@ class DomainScrapJob implements ShouldQueue
             }
             if (($this->year - $first_date <= 0) || ($this->year - $last_date <= 0)) {
                 $response = Http::withHeaders([
-                    'X-RapidAPI-Host' => 'domainr.p.rapidapi.com',
-                    'X-RapidAPI-Key' => 'ee945fba55msh43c04ba37ae8d39p1e79d0jsn487ddd1f7dad',
-                ])->get('https://domainr.p.rapidapi.com/v2/status?mashape-key=d03abf08787645d4a17386782f11b0b7&domain=' . $domain);
+                    'X-RapidAPI-Host' => config('app.x_rapidapi_host'),
+                    'X-RapidAPI-Key' => config('app.x_rapidapi_key'),
+                ])->get('https://' . config('app.x_rapidapi_host') . '/v2/status?mashape-key=' . config('app.mashape_key') . '&domain=' . $domain);
 
                 if ($response->status() == 200) {
                     $data = $response->json();

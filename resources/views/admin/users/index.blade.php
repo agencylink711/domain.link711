@@ -23,7 +23,9 @@
                                 <th>#</th>
                                 <th>Name</th>
                                 <th>Email</th>
+                                <th>Phone</th>
                                 <th>Role</th>
+                                <th>Subscription Plan</th>
                                 <th></th>
                             </tr>
                         </thead>
@@ -33,7 +35,9 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $item->name }}</td>
                                     <td>{{ $item->email }}</td>
+                                    <td>{{ $item->phone }}</td>
                                     <td>{{ $item->role->label() }}</td>
+                                    <td>{{ $item->plan->name }}</td>
                                     <td>
                                         <div class="d-flex" style="gap: 10px">
                                             <a href="{{ route('users.edit', $item->id) }}" class="btn btn-info"

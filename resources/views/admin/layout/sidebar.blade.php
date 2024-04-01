@@ -38,6 +38,17 @@
                         </p>
                     </a>
                 </li>
+                @if (auth()->user()->role === \App\Enums\UserRoles::USER)
+                    <li class="nav-item">
+                        <a href="{{ route('plans.user_index') }}"
+                            class="nav-link @if (Route::is('plans.user_index')) active @endif">
+                            <i class="nav-icon fas fa-th"></i>
+                            <p>
+                                Subscription Plans
+                            </p>
+                        </a>
+                    </li>
+                @endif
                 @if (auth()->user()->role === \App\Enums\UserRoles::ADMIN)
                     <li class="nav-item">
                         <a href="{{ route('niche.index') }}"
@@ -126,6 +137,15 @@
                             <i class="nav-icon fas fa-th"></i>
                             <p>
                                 Processed Jobs
+                            </p>
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a href="{{ route('plans.index') }}"
+                            class="nav-link @if (Route::is('plans.index')) active @endif">
+                            <i class="nav-icon fas fa-th"></i>
+                            <p>
+                                Subscription Plans
                             </p>
                         </a>
                     </li>

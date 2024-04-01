@@ -28,6 +28,16 @@
                             </div>
                             <div class="col-6">
                                 <div class="form-group">
+                                    <label>Phone</label>
+                                    <input type="text" class="form-control" name="phone" id="phone"
+                                        value="{{ $user->phone }}" required>
+                                    @error('phone')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
                                     <label>Email</label>
                                     <input type="email" class="form-control" name="email" id="email"
                                         value="{{ $user->email }}" required>
@@ -43,6 +53,18 @@
                                     @error('password')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
+                                </div>
+                            </div>
+                            <div class="col-6">
+                                <div class="form-group">
+                                    <label>Subscription Plan</label>
+                                    <select name="subscription_id" id="subscription_id" class="form-control" required>
+                                        @foreach ($plans as $item)
+                                            <option value="{{ $item->id }}"
+                                                @if ($user->subscription_id === $item->id) selected @endif>{{ $item->name }}
+                                            </option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
                         </div>

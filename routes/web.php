@@ -11,7 +11,9 @@ use App\Http\Controllers\DomainTldController;
 use App\Http\Controllers\JobController;
 use App\Http\Controllers\JobDoneController;
 use App\Http\Controllers\NicheController;
+use App\Http\Controllers\PlanController;
 use App\Http\Controllers\SubNicheController;
+use App\Http\Controllers\SubscriptionController;
 use App\Http\Controllers\UserController;
 use App\Imports\AdditionalKeywordImport;
 use App\Imports\CityImport;
@@ -30,6 +32,7 @@ use Maatwebsite\Excel\Facades\Excel;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
+
 Route::get('logs', [\Rap2hpoutre\LaravelLogViewer\LogViewerController::class, 'index']);
 
 Route::get('/', function () {
@@ -49,6 +52,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('/start', 'start')->name('start');
     });
 
+    Route::controller(PlanController::class)->prefix('plans')->name('plans.')->group(function () {
+        Route::get('list', 'show')->name('user_index');
+        Route::get('{id}/subscribe', 'subscribe')->name('subscribe');
+        Route::post('{id}/subscribe', 'do_subscribe');
+    });
+    Route::resource('plans', PlanController::class);
     Route::resource('niche', NicheController::class);
     Route::get('niche/change_status/{niche}', [NicheController::class, 'change_status'])->name('niche.change_status');
     Route::resource('countries', CountryController::class);
@@ -61,17 +70,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('users', UserController::class);
     Route::get('domain-tld/change_status/{domain_tld}', [DomainTldController::class, 'change_status'])->name('domain-tld.change_status');
 
-    Route::post('countries/import', [CountryController::class,'import'])->name('countries.import');
-    Route::post('cities/import', [CityController::class,'import'])->name('cities.import');
-    Route::post('keywords/import', [KeywordController::class,'import'])->name('keywords.import');
-    Route::post('niches/import', [NicheController::class,'import'])->name('niches.import');
-    Route::post('sub-niches/import', [SubNicheController::class,'import'])->name('sub-niches.import');
-    Route::post('domain-tld/import', [DomainTldController::class,'import'])->name('domain-tld.import');
+    Route::post('countries/import', [CountryController::class, 'import'])->name('countries.import');
+    Route::post('cities/import', [CityController::class, 'import'])->name('cities.import');
+    Route::post('keywords/import', [KeywordController::class, 'import'])->name('keywords.import');
+    Route::post('niches/import', [NicheController::class, 'import'])->name('niches.import');
+    Route::post('sub-niches/import', [SubNicheController::class, 'import'])->name('sub-niches.import');
+    Route::post('domain-tld/import', [DomainTldController::class, 'import'])->name('domain-tld.import');
 
     Route::resource('available-domains', AvailableDomainController::class);
     Route::resource('sub-niches', SubNicheController::class);
     Route::get('sub-niches/change_status/{sub_niche}', [SubNicheController::class, 'change_status'])->name('sub-niches.change_status');
-    Route::get('job-done', [JobDoneController::class,'index'])->name('job-done.index');
+    Route::get('job-done', [JobDoneController::class, 'index'])->name('job-done.index');
     Route::resource('domain-tld', DomainTldController::class);
 
     Route::controller(JobController::class)->name('job.')->prefix('job')->group(function () {

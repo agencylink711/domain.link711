@@ -26,8 +26,10 @@ class UpdateUserRequest extends FormRequest
         return [
             //
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,id,' . $this->user],
-            'password' => 'sometimes'
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email,' . $this->user],
+            'password' => 'sometimes',
+            'phone' => ['required', 'unique:users,phone,' . $this->user],
+            'subscription_id' => 'required',
         ];
     }
 }

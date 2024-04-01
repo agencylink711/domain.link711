@@ -21,15 +21,17 @@ class DomainController extends Controller
         $keywords = Keyword::orderBy('name', 'asc')->select('id', 'name')->get();
         $niches = Niche::orderBy('name', 'asc')->select('id', 'name')->get();
         $domain_tlds = DomainTld::orderBy('name')->select('id', 'name')->get();
+        $calls = 'unlimited';
         if (auth()->user()->role === \App\Enums\UserRoles::USER) {
             $countries = Country::orderBy('name', 'asc')->select('id', 'name')->get()->random(3);
             $cities = City::orderBy('name', 'asc')->select('id', 'name')->get()->random(3);
-            return view('admin.domain.index', compact('cities', 'countries', 'keywords', 'niches','domain_tlds'));
+            $calls = auth()->user()->plan->api_calls;
+            return view('admin.domain.index', compact('cities', 'countries', 'keywords', 'niches', 'domain_tlds', 'calls'));
         }
         $countries = Country::orderBy('name', 'asc')->select('id', 'name')->get();
         $cities = City::orderBy('name', 'asc')->select('id', 'name')->get();
 
-        return view('admin.domain.index', compact('cities', 'countries', 'keywords', 'niches', 'domain_tlds'));
+        return view('admin.domain.index', compact('cities', 'countries', 'keywords', 'niches', 'domain_tlds', 'calls'));
     }
 
     public function start(Request $request)
@@ -58,18 +60,17 @@ class DomainController extends Controller
             $keywords = [];
             $keywords = array_merge($keywords, [strtolower($niche->name)]);
         }
-        if(count($request->domain_tlds) > 0){
-            $domain_tlds = DomainTld::whereIn('id',$request->domain_tlds)->pluck('name');
-        }
-        else{
-            $domain_tlds = DomainTld::where('name','.com')->pluck('name');
+        if (count($request->domain_tlds) > 0) {
+            $domain_tlds = DomainTld::whereIn('id', $request->domain_tlds)->pluck('name');
+        } else {
+            $domain_tlds = DomainTld::where('name', '.com')->pluck('name');
         }
         foreach ($domain_tlds as $tld) {
 
             if (count($location) > 0) {
                 foreach ($location as $loc) {
                     foreach ($keywords as $k_index => $key) {
-                        if($k_index > 0){
+                        if ($k_index > 0) {
                             sleep(2);
                         }
                         $keyword = str_replace(' ', '', $key);
@@ -94,9 +95,9 @@ class DomainController extends Controller
                         }
                         if (($request->year - $first_date <= 0) || ($request->year - $last_date <= 0)) {
                             $response = Http::withHeaders([
-                                'X-RapidAPI-Host' => 'domainr.p.rapidapi.com',
-                                'X-RapidAPI-Key' => 'ee945fba55msh43c04ba37ae8d39p1e79d0jsn487ddd1f7dad',
-                            ])->get('https://domainr.p.rapidapi.com/v2/status?mashape-key=d03abf08787645d4a17386782f11b0b7&domain=' . $domain);
+                                'X-RapidAPI-Host' => config('app.x_rapidapi_host'),
+                                'X-RapidAPI-Key' => config('app.x_rapidapi_key'),
+                            ])->get('https://' . config('app.x_rapidapi_host') . '/v2/status?mashape-key=' . config('app.mashape_key') . '&domain=' . $domain);
 
                             if ($response->status() == 200) {
                                 $data = $response->json();
@@ -110,7 +111,7 @@ class DomainController extends Controller
                 }
             } else {
                 foreach ($keywords as $k_index => $key) {
-                    if($k_index > 0){
+                    if ($k_index > 0) {
                         sleep(2);
                     }
                     $keyword = str_replace(' ', '', $key);
@@ -135,9 +136,9 @@ class DomainController extends Controller
 
                     if (($request->year - $first_date <= 0) || ($request->year - $last_date <= 0)) {
                         $response = Http::withHeaders([
-                            'X-RapidAPI-Host' => 'domainr.p.rapidapi.com',
-                            'X-RapidAPI-Key' => 'ee945fba55msh43c04ba37ae8d39p1e79d0jsn487ddd1f7dad',
-                        ])->get('https://domainr.p.rapidapi.com/v2/status?mashape-key=d03abf08787645d4a17386782f11b0b7&domain=' . $domain);
+                            'X-RapidAPI-Host' => config('app.x_rapidapi_host'),
+                            'X-RapidAPI-Key' => config('app.x_rapidapi_key'),
+                        ])->get('https://' . config('app.x_rapidapi_host') . '/v2/status?mashape-key=' . config('app.mashape_key') . '&domain=' . $domain);
 
                         if ($response->status() == 200) {
                             $data = $response->json();

@@ -26,8 +26,10 @@ class StoreUserRequest extends FormRequest
         return [
             //
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique|users'],
+            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:users,email'],
             'password' => 'required',
+            'phone' => ['required', 'unique:users,phone'],
+            'subscription_id' => 'required',
         ];
     }
 }

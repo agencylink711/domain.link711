@@ -295,8 +295,8 @@
             }
 
             totalSelections = keywords * (countries.length + cities.length) * domain_tld.length;
-            if (totalSelections > 10) {
-                alert('You cannot select more than 10 combined keywords, countries, and cities.');
+            if ('{{ $calls }}' != 'unlimited' && totalSelections > '{{ $calls }}') {
+                alert(`You cannot select more than {{ $calls }} combined keywords, countries, and cities.`);
             } else {
                 $('#loader').show(); // Show the loader
                 this.submit();

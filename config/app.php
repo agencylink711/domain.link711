@@ -17,6 +17,9 @@ return [
     */
 
     'name' => env('APP_NAME', 'Laravel'),
+    'x_rapidapi_host' => env('X_RAPIDAPI_HOST'),
+    'x_rapidapi_key' => env('X_RAPIDAPI_KEY'),
+    'mashape_key' => env('MASHAPE_KEY'),
 
     /*
     |--------------------------------------------------------------------------

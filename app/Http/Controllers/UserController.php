@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Enums\UserRoles;
 use App\Http\Requests\StoreUserRequest;
 use App\Http\Requests\UpdateUserRequest;
+use App\Models\Plan;
 use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -17,7 +18,7 @@ class UserController extends Controller
     public function index()
     {
         //
-        $users = User::all();
+        $users = User::with('plan')->whereRole('user')->get();
         return view('admin.users.index', compact('users'));
     }
 
@@ -27,7 +28,8 @@ class UserController extends Controller
     public function create()
     {
         //
-        return view('admin.users.create');
+        $plans = Plan::select('name', 'id')->get();
+        return view('admin.users.create', compact('plans'));
     }
 
     /**
@@ -62,8 +64,9 @@ class UserController extends Controller
     {
         //
         $user = User::findOrFail($id);
+        $plans = Plan::select('name', 'id')->get();
 
-        return view('admin.users.edit', compact('user'));
+        return view('admin.users.edit', compact('user', 'plans'));
     }
 
     /**
